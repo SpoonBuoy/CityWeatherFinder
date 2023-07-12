@@ -34,7 +34,7 @@
       var citiesInput = document.getElementById("cities");
       var cities = citiesInput.value.split(",").map(city => city.trim());
 
-      // Make a request to the server
+      
       fetch('/getWeather', {
         method: 'POST',
         headers: {
@@ -46,8 +46,13 @@
       .then(data => {
         var resultDiv = document.getElementById("result");
         resultDiv.innerHTML = "";
-
-        data.forEach(cityData => {
+        console.log(data);
+        if(data.length === 0){
+          var notFound = document.createElement("p");
+          notFound.innerHTML = "Not Found";
+          resultDiv.appendChild(notFound);
+        }
+        else data.forEach(cityData => {
           var cityName = cityData.city;
           var temperature = cityData.temp;
           var cityInfo = document.createElement("p");

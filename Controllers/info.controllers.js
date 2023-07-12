@@ -1,6 +1,7 @@
 const axios = require("axios");
 const getInfo= async (req,res) => {
-  const cities = ['mumbai', 'delhi'];
+  const cities = req.body.cities;
+  console.log(cities);
   const urlstr1 = 'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/';
   const urlstr2 = '?unitGroup=metric&elements=temp&include=current&key=N3Y493H996ZD8YM6RRBQ4Y395&contentType=json';
   let final = [];
@@ -10,12 +11,12 @@ const getInfo= async (req,res) => {
     //console.log(url);
     try{
       response = await axios.get(url);
-      //console.log(response.data.currentConditions.temp);
+      final.push({city : city, temp : response.data.currentConditions.temp});
     }catch(error){
-      console.log(error);
+      //console.log(error);
+      //res.status(201).send("Not Found");
     }
-    //const json = await response.json();
-    final.push({city : city, temp : response.data.currentConditions.temp});
+    
   });
   await Promise.all(finalArray);
   console.log(final);
