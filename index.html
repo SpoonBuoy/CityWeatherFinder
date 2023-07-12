@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>City Temprature Finder</title>
+  <style>
+    body {
+      margin: 20px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input[type="text"] {
+      margin-bottom: 10px;
+    }
+    #result {
+      margin-top: 20px;
+    }
+    #result p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>City Temprature Finder </h1>
+
+  <label for="cities">Enter cities (separated by commas):</label><br>
+  <input type="text" id="cities" placeholder="e.g., Delhi, Mumbai, Srinagar"><br>
+  <button onclick="fetchTemp()">Check Temprature</button>
+
+  <div id="result"></div>
+
+  <script>
+    function fetchTemp() {
+      var citiesInput = document.getElementById("cities");
+      var cities = citiesInput.value.split(",").map(city => city.trim());
+
+      // Make a request to the server
+      fetch('/getWeather', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ cities: cities })
+      })
+      .then(response => response.json())
+      .then(data => {
+        var resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "";
+
+        data.forEach(cityData => {
+          var cityName = cityData.city;
+          var temperature = cityData.temp;
+          var cityInfo = document.createElement("p");
+          cityInfo.innerHTML = cityName + " : " + temperature + "°C";
+          resultDiv.appendChild(cityInfo);
+        });
+      })
+      .catch(error => {
+        console.log('Error:', error);
+      });
+    }
+  </script>
+</body>
+</html>
